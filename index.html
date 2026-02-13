@@ -3,22 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Streakly • v1.1</title>
+  <title>Streakly • v1.1.2</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Splash (Op A) -->
+  <div id="splash" class="splash">
+    <div class="splash-card">
+      <div class="splash-icon"></div>
+    </div>
+  </div>
+
   <header class="topbar">
     <div class="brand">
-      <!-- placeholder icon circle -->
-      <div class="icon"></div>
+      <div class="icon" aria-hidden="true"></div>
       <div class="title">streakly</div>
     </div>
     <div class="right">
-      <button id="modeBtn" class="ghost">Modo</button>
+      <button id="modeBtn" class="ghost" aria-label="Cambiar modo">Modo</button>
     </div>
   </header>
 
-  <main class="app">
+  <main class="app" id="appRoot" aria-live="polite">
     <section class="active-section card">
       <div class="active-header">
         <div id="activeName" class="active-name">— Sin racha activa —</div>
@@ -27,9 +33,7 @@
 
       <div id="activeCounter" class="active-counter">0 días 0 horas 0 minutos 0 segundos</div>
 
-      <div class="active-stats" id="activeStats">
-        <!-- fecha inicio / récord / reinicios -->
-      </div>
+      <div class="active-stats" id="activeStats"></div>
 
       <div class="active-actions">
         <button id="resetBtn" class="danger">Volver a empezar</button>
@@ -46,14 +50,12 @@
         <div class="right guest" id="guestNotice">Modo invitado — tus datos están locales</div>
       </div>
 
-      <div id="streakList" class="streak-list card">
-        <!-- tarjetas de racha aparecerán aquí -->
-      </div>
+      <div id="streakList" class="streak-list card"></div>
     </section>
   </main>
 
   <!-- Modales -->
-  <div id="modal" class="modal hidden">
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
     <div class="modal-card">
       <div id="modalContent"></div>
       <div class="modal-actions">
