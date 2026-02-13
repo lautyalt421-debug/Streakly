@@ -7,14 +7,18 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Splash (Op A) -->
-  <div id="splash" class="splash">
-    <div class="splash-card">
-      <div class="splash-icon"></div>
+  <!-- SPLASH: aparece primero -->
+  <div id="splash" class="splash" aria-hidden="true">
+    <div class="splash-card" role="img" aria-label="Streakly splash">
+      <div class="splash-icon" id="splashIcon"></div>
+      <div class="splash-bar" aria-hidden="true">
+        <div id="splashProgress" class="splash-progress"></div>
+      </div>
     </div>
   </div>
 
-  <header class="topbar">
+  <!-- Top bar -->
+  <header class="topbar" role="banner">
     <div class="brand">
       <div class="icon" aria-hidden="true"></div>
       <div class="title">streakly</div>
@@ -24,6 +28,7 @@
     </div>
   </header>
 
+  <!-- App -->
   <main class="app" id="appRoot" aria-live="polite">
     <section class="active-section card">
       <div class="active-header">
