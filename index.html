@@ -1,74 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Streakly</title>
-<link rel="stylesheet" href="style.css">
-<style>
-body{margin:0;font-family:sans-serif;background:#f9f9f9;color:#222;}
-#splash{position:fixed;top:0;left:0;width:100%;height:100%;background:#007BFF;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:9999;transition:opacity .4s}
-#splashProgress{height:6px;background:#fff;width:0%;border-radius:3px;margin-top:12px;transition:width .1s;}
-.hidden{display:none !important;}
-#loginScreen,#appRoot{padding:20px;}
-input{padding:10px;margin:5px 0;width:100%;box-sizing:border-box;border-radius:6px;border:1px solid #ccc;}
-button{padding:10px 14px;margin:5px;cursor:pointer;border-radius:6px;border:none;background:#007BFF;color:#fff;}
-button.ghost{background:#fff;color:#007BFF;border:1px solid #007BFF;}
-button.danger{background:#dc3545;color:#fff;}
-.streak-card{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#e3e3e3;margin:5px 0;border-radius:8px;}
-.streak-info{flex:1;}
-.streak-name{font-weight:bold;}
-.small-counter{font-size:.8em;color:#555;}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Streakly • v1.2.0</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="light">
-
-<!-- SPLASH -->
-<div id="splash">
-  <h1 style="color:#fff;font-size:2em">Streakly</h1>
-  <div id="splashProgress"></div>
-</div>
-
-<!-- LOGIN -->
-<div id="loginScreen" class="hidden">
-  <h2>Iniciar sesión / Registrarse</h2>
-  <input type="email" id="authEmail" placeholder="Email">
-  <input type="password" id="authPass" placeholder="Contraseña">
-  <div id="authMsg" style="color:red;margin:5px 0;"></div>
-  <button id="authBtn">Ingresar / Registrarse</button>
-  <button id="guestBtn">Entrar como invitado</button>
-</div>
-
-<!-- APP ROOT -->
-<div id="appRoot" class="hidden">
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h1 id="activeName">— Sin racha activa —</h1>
-    <button id="modeBtn">🌙</button>
-  </div>
-  <div id="activeCounter" style="font-size:1.2em;margin:5px 0;">0 días 0 horas 0 minutos 0 segundos</div>
-  <div id="phrase" style="color:#007BFF;font-weight:bold;margin-bottom:12px;">¡Bienvenido!</div>
-  <div>
-    <button id="createBtn">Crear Racha</button>
-    <button id="watchAdBtn">+ Racha</button>
-    <button id="resetBtn">Volver a empezar</button>
-    <button id="editBtn">Editar Racha</button>
-    <button id="signOutBtn" class="hidden">Cerrar sesión</button>
-  </div>
-  <div id="streakList"></div>
-  <div id="guestNotice" style="margin-top:12px;color:#555;"></div>
-</div>
-
-<!-- MODAL -->
-<div id="modal" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:99999;">
-  <div style="background:#fff;padding:20px;border-radius:10px;min-width:300px;">
-    <div id="modalContent"></div>
-    <div style="text-align:right;margin-top:12px;">
-      <button id="modalCancel">Cancelar</button>
-      <button id="modalOk">Aceptar</button>
+  <!-- SPLASH -->
+  <div id="splash" class="splash" role="img" aria-label="Streakly splash">
+    <div class="splash-card">
+      <div id="splashIcon" class="splash-icon" aria-hidden="true"></div>
+      <div class="splash-bar"><div id="splashProgress" class="splash-progress"></div></div>
     </div>
   </div>
-</div>
 
-<script type="module" src="script.js"></script>
+  <!-- LOGIN / WELCOME OVERLAY -->
+  <div id="loginScreen" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="card auth-card">
+      <h2 class="brand-title">streakly</h2>
+      <p class="muted">Iniciá sesión o creá una cuenta. También podés entrar como invitado.</p>
+
+      <label class="label">Correo</label>
+      <input id="authEmail" type="email" placeholder="tu@correo.com" autocomplete="email" />
+
+      <label class="label">Contraseña</label>
+      <input id="authPass" type="password" placeholder="Contraseña" autocomplete="current-password" />
+
+      <div class="row">
+        <button id="authBtn">Ingresar / Registrarse</button>
+        <button id="guestBtn" class="ghost">Entrar como invitado</button>
+      </div>
+
+      <div id="authMsg" class="muted" aria-live="polite" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="icon" aria-hidden="true"></div>
+      <div class="title">streakly</div>
+    </div>
+    <div class="right">
+      <button id="signOutBtn" class="ghost hidden">Salir</button>
+      <button id="modeBtn" class="ghost" aria-label="Cambiar modo">Modo</button>
+    </div>
+  </header>
+
+  <main id="appRoot" class="app hidden" aria-live="polite">
+    <!-- ACTIVE RATCHA -->
+    <section class="active-section card">
+      <div class="active-header">
+        <div id="activeName" class="active-name">— Sin racha activa —</div>
+        <div id="phrase" class="phrase">Crea tu primera racha y empieza a construir identidad.</div>
+      </div>
+
+      <div id="activeCounter" class="active-counter">0 días 0 horas 0 minutos 0 segundos</div>
+
+      <div id="activeStats" class="active-stats" aria-live="polite"></div>
+
+      <div class="active-actions">
+        <button id="resetBtn" class="danger">Volver a empezar</button>
+        <button id="editBtn" class="ghost">Editar</button>
+      </div>
+    </section>
+
+    <!-- LIST + CONTROLS -->
+    <section class="list-section">
+      <div class="controls card">
+        <div class="left">
+          <button id="createBtn">+ Crear racha</button>
+          <button id="watchAdBtn" class="ghost">🎥 Ver anuncio (+1 racha)</button>
+        </div>
+        <div class="right guest" id="guestNotice">Modo invitado — tus datos están locales</div>
+      </div>
+
+      <div id="streakList" class="streak-list card"></div>
+    </section>
+  </main>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div id="modalContent"></div>
+      <div class="modal-actions">
+        <button id="modalCancel" class="ghost">Cancelar</button>
+        <button id="modalOk">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script (module) -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
