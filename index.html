@@ -1,24 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Streakly</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Streakly • v1.1</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <div class="container">
-    <h1>Streakly</h1>
-
-    <div class="counter" id="counter">
-      0 días 0 horas 0 minutos 0 segundos
+  <header class="topbar">
+    <div class="brand">
+      <!-- placeholder icon circle -->
+      <div class="icon"></div>
+      <div class="title">streakly</div>
     </div>
+    <div class="right">
+      <button id="modeBtn" class="ghost">Modo</button>
+    </div>
+  </header>
 
-    <div class="buttons">
-      <button onclick="startStreak()">Crear racha</button>
-      <button onclick="resetStreak()">Volver a empezar</button>
-      <button onclick="toggleMode()">Modo claro/oscuro</button>
+  <main class="app">
+    <section class="active-section card">
+      <div class="active-header">
+        <div id="activeName" class="active-name">— Sin racha activa —</div>
+        <div id="phrase" class="phrase">Crea tu primera racha y empieza a construir identidad.</div>
+      </div>
+
+      <div id="activeCounter" class="active-counter">0 días 0 horas 0 minutos 0 segundos</div>
+
+      <div class="active-stats" id="activeStats">
+        <!-- fecha inicio / récord / reinicios -->
+      </div>
+
+      <div class="active-actions">
+        <button id="resetBtn" class="danger">Volver a empezar</button>
+        <button id="editBtn" class="ghost">Editar</button>
+      </div>
+    </section>
+
+    <section class="list-section">
+      <div class="controls card">
+        <div class="left">
+          <button id="createBtn">+ Crear racha</button>
+          <button id="watchAdBtn" class="ghost">🎥 Ver anuncio (+1 racha)</button>
+        </div>
+        <div class="right guest" id="guestNotice">Modo invitado — tus datos están locales</div>
+      </div>
+
+      <div id="streakList" class="streak-list card">
+        <!-- tarjetas de racha aparecerán aquí -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Modales -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <div id="modalContent"></div>
+      <div class="modal-actions">
+        <button id="modalCancel" class="ghost">Cancelar</button>
+        <button id="modalOk">Aceptar</button>
+      </div>
     </div>
   </div>
 
