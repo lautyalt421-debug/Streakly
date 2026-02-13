@@ -3,18 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Streakly • v1.3</title>
+  <title>Streakly • v1.3.2</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="light">
-  <!-- SPLASH: usa gradiente mesh → y el logo que subas -->
+  <!-- SPLASH -->
   <div id="splash" class="splash" role="img" aria-label="Streakly splash">
     <div class="splash-card">
       <div class="splash-icon" aria-hidden="true">
-        <!-- Imagen real para splash (subila a assets/logo-full.png) -->
         <img id="splashLogo" src="assets/logo-full.png" alt="Streakly logo" />
       </div>
-
       <div class="splash-bar"><div id="splashProgress" class="splash-progress"></div></div>
     </div>
   </div>
@@ -23,15 +21,13 @@
   <div id="loginScreen" class="overlay hidden" role="dialog" aria-modal="true">
     <div class="card auth-card">
       <div class="auth-top">
-        <!-- Top small logo: usa assets/logo-icon.png -->
-        <div class="logo-small" aria-hidden="true">
-          <img id="authLogo" src="assets/logo-icon.png" alt="Streakly icon" />
-        </div>
+        <div class="logo-small" aria-hidden="true"><img id="authLogo" src="assets/logo-icon.png" alt="Streakly icon" /></div>
         <h2 class="brand-title">streakly</h2>
+        <p class="muted">Cultiva hábitos con rachas inteligentes.</p>
       </div>
 
       <div id="authForms">
-        <!-- LOGIN FORM (default visible) -->
+        <!-- LOGIN FORM -->
         <form id="loginForm" class="auth-form">
           <label class="label">Correo</label>
           <input id="authEmail" type="email" placeholder="tu@correo.com" autocomplete="email" />
@@ -40,7 +36,7 @@
           <input id="authPass" type="password" placeholder="Contraseña" autocomplete="current-password" />
 
           <div class="row">
-            <button type="button" id="signInBtn">Iniciar sesión</button>
+            <button type="button" id="signInBtn" class="btn primary">Iniciar sesión</button>
           </div>
 
           <div class="muted" id="authMsg" aria-live="polite"></div>
@@ -51,11 +47,11 @@
           </div>
 
           <div class="divider">o</div>
-          <button type="button" id="googleBtn" class="ghost google">Iniciar sesión con Google</button>
-          <button type="button" id="guestBtn" class="ghost">Entrar como invitado</button>
+          <button type="button" id="googleBtn" class="btn google">Iniciar sesión con Google</button>
+          <button type="button" id="guestBtn" class="btn ghost">Entrar como invitado</button>
         </form>
 
-        <!-- REGISTER FORM (hidden until toggled) -->
+        <!-- REGISTER FORM -->
         <form id="registerForm" class="auth-form hidden">
           <label class="label">Correo</label>
           <input id="regEmail" type="email" placeholder="tu@correo.com" autocomplete="email" />
@@ -64,7 +60,7 @@
           <input id="regPass" type="password" placeholder="Contraseña" autocomplete="new-password" />
 
           <div class="row">
-            <button type="button" id="registerBtn">Registrarse</button>
+            <button type="button" id="registerBtn" class="btn primary">Registrarse</button>
           </div>
 
           <div class="muted" id="regMsg" aria-live="polite"></div>
@@ -75,27 +71,26 @@
           </div>
 
           <div class="divider">o</div>
-          <button type="button" id="googleBtnReg" class="ghost google">Registrarse con Google</button>
-          <button type="button" id="guestBtnReg" class="ghost">Entrar como invitado</button>
+          <button type="button" id="googleBtnReg" class="btn google">Registrarse con Google</button>
+          <button type="button" id="guestBtnReg" class="btn ghost">Entrar como invitado</button>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- APP -->
+  <!-- TOPBAR -->
   <header class="topbar">
     <div class="brand">
-      <div class="icon" aria-hidden="true">
-        <img id="topbarIcon" src="assets/logo-icon.png" alt="Streakly icon" />
-      </div>
+      <div class="icon" aria-hidden="true"><img id="topbarIcon" src="assets/logo-icon.png" alt="Streakly icon" /></div>
       <div class="title">streakly</div>
     </div>
     <div class="right">
-      <button id="signOutBtn" class="ghost hidden">Salir</button>
-      <button id="modeBtn" class="ghost" aria-label="Cambiar modo">Modo</button>
+      <button id="signOutBtn" class="btn ghost hidden">Salir</button>
+      <button id="modeBtn" class="btn ghost" aria-label="Cambiar modo">Modo</button>
     </div>
   </header>
 
+  <!-- APP -->
   <main id="appRoot" class="app hidden" aria-live="polite">
     <section class="active-section card">
       <div class="active-header">
@@ -108,16 +103,16 @@
       <div id="activeStats" class="active-stats" aria-live="polite"></div>
 
       <div class="active-actions">
-        <button id="resetBtn" class="danger">Volver a empezar</button>
-        <button id="editBtn" class="ghost">Editar</button>
+        <button id="resetBtn" class="btn danger">Volver a empezar</button>
+        <button id="editBtn" class="btn ghost">Editar</button>
       </div>
     </section>
 
     <section class="list-section">
       <div class="controls card">
         <div class="left">
-          <button id="createBtn">+ Crear racha</button>
-          <button id="watchAdBtn" class="ghost">🎥 Ver anuncio (+1 racha)</button>
+          <button id="createBtn" class="btn">+ Crear racha</button>
+          <button id="watchAdBtn" class="btn ghost">🎥 Ver anuncio (+1 racha)</button>
         </div>
         <div class="right guest" id="guestNotice">Modo invitado — tus datos están locales</div>
       </div>
@@ -131,13 +126,16 @@
     <div class="modal-card">
       <div id="modalContent"></div>
       <div class="modal-actions">
-        <button id="modalCancel" class="ghost">Cancelar</button>
-        <button id="modalOk" class="ghost">Aceptar</button>
+        <button id="modalCancel" class="btn ghost">Cancelar</button>
+        <button id="modalOk" class="btn primary">Aceptar</button>
       </div>
     </div>
   </div>
 
-  <!-- Mantén tu script.js (v1.3) -->
+  <!-- CONFETTI LAYER -->
+  <div id="confettiLayer" aria-hidden="true" style="pointer-events:none;position:fixed;inset:0;z-index:12000;"></div>
+
+  <!-- script -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
