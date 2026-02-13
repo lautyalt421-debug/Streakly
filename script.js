@@ -4,14 +4,23 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebas
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-//// --- PONÉ AQUÍ TU CONFIG DE FIREBASE (cópiala desde la consola) ---
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  // apiKey: "TU_API_KEY",
-  // authDomain: "TU_PROJECT.firebaseapp.com",
-  // projectId: "TU_PROJECT",
-  // storageBucket: "TU_PROJECT.appspot.com",
-  // messagingSenderId: "TU_MESSAGING",
-  // appId: "TU_APPID"
+  apiKey: "AIzaSyDtgN1u0Twg34Std9E4_NmZ8tkhSb379Ik",
+  authDomain: "streakly-be-yourself.firebaseapp.com",
+  projectId: "streakly-be-yourself",
+  storageBucket: "streakly-be-yourself.firebasestorage.app",
+  messagingSenderId: "455754798246",
+  appId: "1:455754798246:web:03c7956876b4b6fd4a9067"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 };
 // --------------------------------------------------------------------
 
