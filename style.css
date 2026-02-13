@@ -1,153 +1,104 @@
 /* =====================================================
-   STREAKLY v1.3.1 CSS COMPLETO
-   Splash, login/register, topbar, app, rachas, modales
-   Logo sin fondo ya escalado correctamente
+   STREAKLY v1.3.2 CSS - Animaciones y estética mejoradas
    ===================================================== */
 
 /* -------------------- GLOBAL -------------------- */
-body {
-  margin:0;
-  font-family: 'Inter', sans-serif;
-  color:#fff;
-  background:#1a1a1a;
-  overflow-x:hidden;
-}
-.light { background:#fdfdfd; color:#111; }
-.hidden { display:none !important; }
-button { cursor:pointer; border:none; outline:none; }
-button.ghost { background:none; color:inherit; }
-a, .linkish { cursor:pointer; color:#34E0D1; text-decoration:underline; }
-
-/* ==== Logo sizing & remove generic SVG fallback ==== */
-/* Contenedores */
-.splash-icon { width: 120px; height: 120px; display:flex; align-items:center; justify-content:center; margin:0 auto; }
-.logo-small { width: 80px; height: 80px; display:flex; align-items:center; justify-content:center; }
-.topbar .icon { width: 36px; height: 36px; display:flex; align-items:center; justify-content:center; }
-
-/* Imágenes (tamaño máximo y centrado) */
-#splashLogo,
-#authLogo,
-#topbarIcon,
-.logo-small img,
-.splash-icon img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  display: block;
-  object-fit: contain;
+:root{
+  --bg:#0b0d12;
+  --panel: rgba(20,22,28,0.6);
+  --glass: rgba(255,255,255,0.03);
+  --accent1:#34E0D1;
+  --accent2:#2C5AE5;
+  --accent3:#FF42A1;
+  --muted:#9aa3b2;
+  --card-radius:16px;
+  --max-width:980px;
+  --ease: cubic-bezier(.2,.9,.25,1);
 }
 
-/* Valores estrictos para asegurar que nunca sean gigantes */
-#splashLogo { max-width: 120px; max-height: 120px; }
-#authLogo   { max-width: 80px;  max-height: 80px;  }
-#topbarIcon { max-width: 36px;  max-height: 36px;  }
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:var(--bg); color:#e6eef8; -webkit-font-smoothing:antialiased;}
+.hidden{display:none!important}
+a, .linkish{color:var(--accent3);cursor:pointer}
 
-/* Ocultar cualquier fallback SVG que haya quedado */
-.fallback-logo,
-.fallback-icon,
-.fallback-topbar-icon { display: none !important; }
+/* -------------------- Buttons -------------------- */
+.btn{padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:700;transition:transform .12s var(--ease), box-shadow .12s var(--ease); display:inline-flex;align-items:center;gap:8px}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#061017;box-shadow:0 10px 30px rgba(44,90,229,0.12)}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit}
+.btn.google{background:#fff;color:#0b0d12;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.12)}
+.btn.danger{background:linear-gradient(90deg,#ff6b6b,#e63946);color:white}
 
-/* Asegurar que el contenedor del auth-card no crezca por culpa del logo */
-.auth-card { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-
-/* Pequeño ajuste responsive */
-@media (min-width: 720px){
-  .splash-icon { width: 140px; height: 140px; }
-  #splashLogo { max-width: 140px; max-height: 140px; }
-}
+/* hover */
+.btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,0.18)}
 
 /* -------------------- SPLASH -------------------- */
-.splash{
-  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-  background: linear-gradient(135deg,#1A42AC 0%, #8C38C1 55%, #E64998 100%);
-  z-index:10000;
-  overflow:hidden;
-}
-.splash::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0, transparent 20%),
-    radial-gradient(circle at 90% 85%, rgba(0,0,0,0.04) 0, transparent 30%);
-}
-.splash-card{
-  width:200px;height:200px;border-radius:26px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-  transform-origin:center;
-  animation:popIn .7s cubic-bezier(.2,.9,.2,1);
-  position:relative;
-}
-.splash-icon{
-  width:92px;height:92px;border-radius:18px; display:flex;align-items:center;justify-content:center;overflow:visible; margin-bottom:16px; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.35));
-}
-.fallback-logo{ display:block; width:86px; height:86px; }
-.splash-bar{ width:78%; height:12px; background: rgba(255,255,255,0.08); border-radius:8px; overflow:hidden; }
-.splash-progress{ width:0%; height:100%; border-radius:8px; transition: width .35s ease; background: linear-gradient(90deg,#34E0D1 0%, #2C5AE5 50%, #FF42A1 100%); box-shadow: inset 0 -2px 6px rgba(0,0,0,0.12); }
-.splash-card::after{
-  content:"";position:absolute;left: -40%;top:-30%;width:180%;height:160%;transform:rotate(25deg);background:linear-gradient(90deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.0) 45%, rgba(255,255,255,0.06) 100%);opacity:0.6;mix-blend-mode:overlay;animation:sheen 3.2s linear infinite;
-}
-@keyframes sheen{0%{transform:translateX(-30%) rotate(25deg)}100%{transform:translateX(30%) rotate(25deg)}}
-@keyframes popIn{0%{transform:scale(.95);opacity:0}60%{transform:scale(1.02);opacity:1}100%{transform:scale(1);opacity:1}}
+.splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background: linear-gradient(135deg,#1A42AC 0%, #8C38C1 55%, #E64998 100%); z-index:10000; overflow:hidden;}
+.splash::before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(circle at 15% 15%, rgba(255,255,255,0.03) 0, transparent 18%),
+  radial-gradient(circle at 85% 85%, rgba(0,0,0,0.05) 0, transparent 28%);}
+.splash-card{width:220px;height:220px;border-radius:22px;background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 30px 80px rgba(0,0,0,0.5);position:relative;animation:popIn .7s var(--ease);}
+.splash-icon{width:140px;height:140px;border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;filter:drop-shadow(0 18px 40px rgba(0,0,0,0.45))}
+.splash-icon img{max-width:100%;max-height:100%;display:block;object-fit:contain}
+.splash-bar{width:86%;height:12px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden}
+.splash-progress{width:0%;height:100%;border-radius:10px;transition:width .35s var(--ease);background:linear-gradient(90deg,var(--accent1) 0%, var(--accent2) 50%, var(--accent3) 100%);box-shadow:inset 0 -2px 6px rgba(0,0,0,0.2)}
+@keyframes popIn{0%{transform:translateY(6px) scale(.98);opacity:0}60%{transform:translateY(-3px) scale(1.02);opacity:1}100%{transform:translateY(0) scale(1)}}
 
 /* -------------------- TOPBAR -------------------- */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 16px; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px);
-  position:sticky;top:0; z-index:200;
-}
-.topbar .brand { display:flex;align-items:center;gap:10px; }
-.topbar .brand .icon img, .topbar .brand .icon svg{ width:36px;height:36px; border-radius:8px; }
-.topbar .brand .title { font-size:1.25rem; font-weight:700; text-transform:capitalize; }
-.topbar .right button { margin-left:10px; }
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);backdrop-filter:blur(8px);position:sticky;top:0;z-index:300}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .icon img{width:40px;height:40px;border-radius:10px}
+.brand .title{font-weight:800;font-size:1.1rem;letter-spacing:1px;color:#fff}
 
-/* -------------------- LOGIN / REGISTER -------------------- */
-.overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000;
-}
-.card.auth-card{
-  width:90%;max-width:360px;padding:24px;border-radius:16px;
-  background: rgba(30,30,30,0.85);backdrop-filter:blur(8px);
-  display:flex;flex-direction:column;gap:12px;
-}
-.auth-top { text-align:center; margin-bottom:16px; }
-.auth-top h2.brand-title { font-size:2rem; font-weight:700; text-transform:capitalize; color:#fff; }
-.auth-form { display:flex; flex-direction:column; gap:12px; }
-.auth-form input { padding:10px 12px; border-radius:8px; border:none; outline:none; }
-.auth-form .row{ display:flex; justify-content:flex-end; gap:10px; }
-.auth-form .alt{ display:flex;justify-content:center;align-items:center;gap:6px; margin-top:8px; font-size:.875rem; color:#ccc; }
-.auth-form .divider{ text-align:center; margin:12px 0; position:relative; color:#888; font-size:.75rem;}
-.auth-form .divider::before, .auth-form .divider::after{
-  content:""; position:absolute; top:50%; width:40%; height:1px; background:#555;
-}
-.auth-form .divider::before{ left:0; }
-.auth-form .divider::after{ right:0; }
+/* -------------------- AUTH OVERLAY -------------------- */
+.overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(2,6,23,0.55), rgba(2,6,23,0.85));display:flex;align-items:center;justify-content:center;z-index:1100}
+.auth-card{width:92%;max-width:420px;padding:22px;border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 20px 60px rgba(2,6,23,0.6);display:flex;flex-direction:column;gap:12px;align-items:center}
+.auth-top{display:flex;flex-direction:column;align-items:center;gap:8px}
+.logo-small img{width:84px;height:84px;object-fit:contain;border-radius:12px}
+.auth-top .brand-title{font-size:1.8rem;margin:0;font-weight:800}
+.auth-form{width:100%;display:flex;flex-direction:column;gap:10px}
+.auth-form input{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;outline:none;transition:box-shadow .12s}
+.auth-form input:focus{box-shadow:0 10px 30px rgba(44,90,229,0.08);border-color:rgba(100,140,255,0.18)}
+.muted{color:var(--muted);font-size:.9rem}
+.alt{display:flex;gap:8px;align-items:center;font-size:.92rem;color:var(--muted)}
+.divider{width:100%;text-align:center;color:rgba(255,255,255,0.08);margin:10px 0;font-weight:600}
 
-/* Google button */
-button.google{ background:#fff;color:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:8px; padding:8px; font-weight:600; }
+/* -------------------- APP LAYOUT -------------------- */
+.app{max-width:var(--max-width);margin:18px auto;padding:0 18px;display:grid;grid-template-columns:1fr;gap:16px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:16px;box-shadow:0 10px 40px rgba(2,6,23,0.5)}
+.active-section{display:flex;flex-direction:column;align-items:center;gap:8px}
+.active-name{font-weight:800;font-size:1.05rem}
+.phrase{color:var(--accent1);font-weight:700}
+.active-counter{font-size:1.6rem;font-weight:900;margin-top:6px;letter-spacing:0.6px;transition:transform .18s var(--ease)}
+.active-counter.pop{transform:scale(1.04)}
 
-/* -------------------- APP / SECTIONS -------------------- */
-.app{ display:flex; flex-direction:column; padding:16px; gap:12px; }
-.card{ background: rgba(0,0,0,0.65); backdrop-filter:blur(8px); padding:16px; border-radius:14px; }
-.active-counter{ font-size:1.5rem; font-weight:700; text-align:center; margin:12px 0; }
-.active-actions{ display:flex; justify-content:center; gap:10px; margin-top:12px; }
-button.danger{ background:#e63946; color:#fff; padding:8px 14px; border-radius:8px; font-weight:600; }
-button.ghost{ background:none; border:1px solid #555; padding:6px 12px; border-radius:8px; color:#fff; font-weight:500; }
-
-/* -------------------- STREAK LIST -------------------- */
-.streak-list{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
-.streak-item{ display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:10px; background: rgba(255,255,255,0.05); }
-.streak-item .name{ font-weight:600; }
-.streak-item .time{ font-weight:500; font-size:.875rem; }
+/* -------------------- CONTROLS + LIST -------------------- */
+.controls{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.controls .left{display:flex;gap:8px}
+.right.guest{color:var(--muted)}
+.streak-list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.streak-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);transition:transform .18s,var(--ease);box-shadow:0 12px 30px rgba(2,6,23,0.4)}
+.streak-card:hover{transform:translateY(-6px) rotate(-0.2deg)}
+.streak-info{display:flex;flex-direction:column}
+.streak-name{font-weight:800}
+.small-counter{font-size:.9rem;color:var(--muted)}
 
 /* -------------------- MODAL -------------------- */
-.modal{ position:fixed; inset:0; display:flex;align-items:center;justify-content:center; background:rgba(0,0,0,0.6); z-index:1000; }
-.modal-card{ background: rgba(30,30,30,0.85); padding:20px; border-radius:14px; min-width:280px; max-width:90%; display:flex; flex-direction:column; gap:12px; }
-.modal-actions{ display:flex; justify-content:flex-end; gap:8px; }
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.65);z-index:1200}
+.modal-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:14px;min-width:300px;display:flex;flex-direction:column;gap:12px}
 
-/* -------------------- MISC -------------------- */
-.row{ display:flex; gap:10px; }
-.muted{ font-size:.75rem; color:#aaa; }
-.right.guest{ font-size:.75rem; color:#ccc; text-align:right; }
-button:disabled{ opacity:.5; cursor:not-allowed; }
+/* -------------------- CONFETTI (JS) -------------------- */
+.confetti {
+  position:fixed; width:10px; height:16px; opacity:0.95; transform-origin:center; pointer-events:none;
+  will-change: transform, opacity;
+  border-radius:2px;
+}
+
+/* -------------------- RESPONSIVE -------------------- */
+@media(min-width:900px){
+  .app{grid-template-columns:1fr 420px}
+  .splash-card{width:240px;height:240px}
+  .splash-icon{width:160px;height:160px}
+}
