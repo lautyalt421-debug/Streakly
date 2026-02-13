@@ -1,127 +1,239 @@
-:root{
-  --bg-light:#f4f4f4;
-  --text-light:#0f1720;
-  --card-light:#ffffff;
-  --card-border-light:rgba(2,6,23,0.06);
+// Streakly v1.1.2 - splash + progress + local-first app
+(function(){
+  // --- Splash & theme restore (run asap on DOMContentLoaded) ---
+  document.addEventListener('DOMContentLoaded', ()=> {
+    // Restore theme immediately to avoid flash
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.classList.add(savedTheme);
 
-  --bg-dark:#0f0f12;
-  --text-dark:#eef2ff;
-  --card-dark:rgba(255,255,255,0.02);
-  --card-border-dark:rgba(255,255,255,0.06);
+    // Splash progress animation
+    const splash = document.getElementById('splash');
+    const progressEl = document.getElementById('splashProgress');
+    if(!splash || !progressEl){
+      // If splash missing, init app immediately
+      initApp();
+      return;
+    }
 
-  --accent1:#3b82f6; /* azul logo */
-  --accent2:#6d5dfc; /* violeta logo */
+    let loadPct = 0;
+    const interval = setInterval(()=>{
+      // sube de forma algo aleatoria pero no demasiado lenta
+      loadPct += Math.floor(Math.random()*12)+8;
+      if(loadPct > 100) loadPct = 100;
+      progressEl.style.width = loadPct + '%';
+      if(loadPct >= 100){
+        clearInterval(interval);
+        // ocultar splash suavemente y luego iniciar la app
+        splash.style.opacity = '0';
+        setTimeout(()=> {
+          if(splash.parentNode) splash.parentNode.removeChild(splash);
+          initApp();
+        }, 450);
+      }
+    }, 110);
 
-  --card-radius:14px;
-  --max-width:920px;
-}
+    // Timeout fallback: si por alguna razon la animación no llega al 100
+    setTimeout(()=>{
+      if(loadPct < 100){
+        progressEl.style.width = '100%';
+        clearInterval(interval);
+        splash.style.opacity = '0';
+        setTimeout(()=> { if(splash.parentNode) splash.parentNode.removeChild(splash); initApp(); }, 450);
+      }
+    }, 2500);
+  });
 
-/* Reset + base */
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;transition:background 0.25s ease,color 0.25s ease}
-:root{color-scheme: light dark}
+  // --- App initialization (se ejecuta después del splash) ---
+  function initApp(){
+    // Constants / state
+    const MAX_FREE = 3;
+    let unlockedSlots = parseInt(localStorage.getItem('unlockedSlots')||MAX_FREE,10);
+    let streaks = JSON.parse(localStorage.getItem('streaks')||'[]');
+    let activeId = localStorage.getItem('activeId') || (streaks[0] && streaks[0].id) || null;
+    const isGuest = true; // modo invitado por ahora
 
-/* Theme variables switched by body class */
-body.light{
-  background:var(--bg-light);
-  color:var(--text-light);
-  --card-bg: var(--card-light);
-  --card-border: var(--card-border-light);
-  --ghost-border: rgba(15,23,32,0.08);
-  --modal-bg: #ffffff;
-  --modal-text: var(--text-light);
-  --splash-text: rgba(255,255,255,0.95);
-}
-body.dark{
-  background:var(--bg-dark);
-  color:var(--text-dark);
-  --card-bg: var(--card-dark);
-  --card-border: var(--card-border-dark);
-  --ghost-border: rgba(255,255,255,0.08);
-  --modal-bg: rgba(8,10,12,0.92);
-  --modal-text: var(--text-dark);
-  --splash-text: rgba(255,255,255,0.95);
-}
+    // Helpers
+    const el = id => document.getElementById(id);
+    const uid = ()=> Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    const save = ()=> { localStorage.setItem('streaks', JSON.stringify(streaks)); localStorage.setItem('unlockedSlots', unlockedSlots); localStorage.setItem('activeId', activeId); }
 
-/* Topbar and brand */
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
-.brand{display:flex;gap:10px;align-items:center}
-.icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));box-shadow:0 6px 18px rgba(59,130,246,0.18)}
-.title{text-transform:lowercase;font-weight:600;letter-spacing:1px}
+    // Phrases
+    function phraseForDays(d){
+      if(d<=0) return "Cada comienzo es valioso.";
+      if(d<3) return "Estás construyendo impulso.";
+      if(d<7) return "Una semana no es suerte.";
+      if(d<30) return "Tu identidad está cambiando.";
+      if(d<100) return "Esto ya es parte de quién sos.";
+      return "Eres el hábito manifestado.";
+    }
 
-/* Buttons */
-.right{display:flex;gap:8px;align-items:center}
-.ghost{
-  background:transparent;
-  border:1px solid var(--ghost-border);
-  padding:8px 10px;border-radius:10px;cursor:pointer;color:inherit;
-}
-button{cursor:pointer;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;padding:10px 14px;border-radius:10px;font-weight:600;transition:transform 0.15s ease,opacity .15s}
-button:active{transform:translateY(1px)}
-.danger{background:transparent;border:1px solid rgba(255,80,80,0.18);color:inherit}
+    // Time formatting
+    function formatDiff(ms){
+      if(ms<0) ms=0;
+      const s = Math.floor(ms/1000)%60;
+      const m = Math.floor(ms/60000)%60;
+      const h = Math.floor(ms/3600000)%24;
+      const d = Math.floor(ms/86400000);
+      return `${d} días ${h} horas ${m} minutos ${s} segundos`;
+    }
 
-/* App layout */
-.app{display:grid;grid-template-columns:1fr;gap:16px;padding:16px;max-width:var(--max-width);margin:0 auto}
-.card{
-  background:var(--card-bg);
-  border-radius:var(--card-radius);
-  padding:16px;
-  box-shadow:0 6px 20px rgba(2,6,23,0.06);
-  border:1px solid var(--card-border);
-  transition:background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
-}
+    // Render UI
+    function render(){
+      // Active
+      const active = streaks.find(s=>s.id===activeId) || null;
+      if(el('activeName')) el('activeName').innerText = active ? active.name : '— Sin racha activa —';
+      if(active){
+        const now = Date.now();
+        if(el('activeCounter')) el('activeCounter').innerText = formatDiff(now - active.start);
+        if(el('phrase')) el('phrase').innerText = phraseForDays(Math.floor((Date.now()-active.start)/86400000));
+        if(el('activeStats')) el('activeStats').innerHTML = `
+          <div>Inicio: ${new Date(active.start).toLocaleDateString()}</div>
+          <div>Récord: ${active.record || 0} días</div>
+          <div>Reinicios: ${active.resets||0}</div>
+        `;
+      } else {
+        if(el('activeCounter')) el('activeCounter').innerText = '0 días 0 horas 0 minutos 0 segundos';
+        if(el('activeStats')) el('activeStats').innerHTML = '';
+      }
 
-/* Active area */
-.active-section{display:flex;flex-direction:column;align-items:center;gap:12px;min-height:220px;justify-content:center;transition:transform 0.3s ease}
-.active-name{font-size:18px;font-weight:700;text-transform:capitalize}
-.phrase{font-size:13px;opacity:0.95}
-.active-counter{font-size:20px;font-weight:700;letter-spacing:0.4px;animation:pulse 1s linear infinite}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.01)}100%{transform:scale(1)}}
-.active-stats{font-size:13px;opacity:0.95}
-.active-actions{display:flex;gap:8px}
+      // List
+      const list = el('streakList');
+      if(list){
+        list.innerHTML = '';
+        streaks.forEach(s=>{
+          const div = document.createElement('div');
+          div.className = 'streak-card';
+          const left = document.createElement('div'); left.className='streak-info';
+          const name = document.createElement('div'); name.className='streak-name'; name.innerText = s.name;
+          const small = document.createElement('div'); small.className='small-counter';
+          small.innerText = formatDiff(Date.now()-s.start);
+          left.appendChild(name); left.appendChild(small);
 
-/* List & cards */
-.list-section{display:flex;flex-direction:column;gap:12px}
-.controls{display:flex;justify-content:space-between;align-items:center}
-.streak-list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
-.streak-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);transition:transform .12s ease;border:1px solid var(--card-border)}
-.streak-info{display:flex;flex-direction:column}
-.streak-name{font-weight:700}
-.small-counter{font-size:13px;opacity:0.85}
-.card button.small{padding:8px 10px;font-size:13px}
-.guest{font-size:13px;opacity:0.85}
+          const right = document.createElement('div');
+          const setBtn = document.createElement('button'); setBtn.className='small ghost'; setBtn.innerText = (s.id===activeId ? 'Activa' : 'Activar');
+          setBtn.onclick = ()=>{ activeId = s.id; save(); render(); };
+          const delBtn = document.createElement('button'); delBtn.className='small danger'; delBtn.innerText='Eliminar';
+          delBtn.onclick = ()=>{ confirmModal(`Eliminar la racha "${s.name}"? Esta acción borra el registro.`, ()=>{
+            streaks = streaks.filter(x=>x.id!==s.id);
+            if(activeId===s.id) activeId = streaks[0] ? streaks[0].id : null;
+            save(); render();
+          }); };
+          right.appendChild(setBtn); right.appendChild(delBtn);
 
-/* Modal adjustments */
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.45);backdrop-filter: blur(4px)}
-.modal.hidden{display:none}
-.modal-card{background:var(--modal-bg);color:var(--modal-text);padding:18px;border-radius:12px;min-width:280px;max-width:92%;box-shadow:0 10px 30px rgba(2,6,23,0.18)}
-.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+          div.appendChild(left); div.appendChild(right);
+          list.appendChild(div);
+        });
+      }
 
-/* SPLASH (logo colors + barra) */
-.splash{
-  position:fixed; inset:0;
-  display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg,var(--accent1),var(--accent2));
-  z-index:9999;
-}
-.splash-card{
-  width:160px; height:160px; border-radius:24px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  box-shadow:0 20px 60px rgba(2,6,23,0.25);animation:popIn 700ms ease;
-}
-.splash-icon{
-  width:86px; height:86px; border-radius:18px;
-  background:linear-gradient(135deg,#fff8,#ffffff55); /* placeholder: se ve bien sobre gradiente */
-  margin-bottom:14px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.12);
-}
-.splash-bar{width:80%; height:8px; background:rgba(255,255,255,0.18); border-radius:6px; overflow:hidden}
-.splash-progress{width:0%; height:100%; background:linear-gradient(90deg,var(--accent1),var(--accent2)); border-radius:6px; transition:width .35s ease}
-@keyframes popIn{0%{transform:scale(.9);opacity:0}60%{transform:scale(1.03);opacity:1}100%{transform:scale(1)}}
+      // guest notice and create button enable
+      if(el('guestNotice')) el('guestNotice').innerText = isGuest ? 'Modo invitado — tus datos están locales' : '';
+      if(el('createBtn')) el('createBtn').disabled = (streaks.length >= unlockedSlots);
+      if(el('watchAdBtn')) el('watchAdBtn').disabled = (unlockedSlots >= 10); // cap
+    }
 
-/* Responsive */
-@media(min-width:720px){
-  .app{grid-template-columns:1fr 380px}
-  .active-section{min-height:300px}
-                                                                           }
+    render();
+
+    // Update counters every second
+    setInterval(()=> { render(); }, 1000);
+
+    // UI actions
+    if(el('createBtn')) el('createBtn').onclick = ()=> {
+      if(streaks.length >= unlockedSlots){
+        showToast(`Límite de rachas gratis (${unlockedSlots}). Ver anuncio para +1.`);
+        return;
+      }
+      inputModal('Crear racha', 'Nombre de la racha', '', (val)=>{
+        if(!val) return showToast('El nombre no puede estar vacío.');
+        const s = { id: uid(), name: val, start: Date.now(), resets:0, record:0 };
+        streaks.push(s);
+        activeId = s.id;
+        save(); render();
+      });
+    };
+
+    if(el('watchAdBtn')) el('watchAdBtn').onclick = ()=> {
+      showAdSimulation(()=> {
+        unlockedSlots += 1;
+        save();
+        showToast('+1 racha desbloqueada');
+        render();
+      });
+    };
+
+    if(el('resetBtn')) el('resetBtn').onclick = ()=> {
+      if(!activeId) return showToast('No hay racha activa.');
+      confirmModal(`¿Seguro? "Volver a empezar" reinicia la racha. Si sos honesto, tocá aceptar.`, ()=>{
+        const s = streaks.find(x=>x.id===activeId);
+        if(!s) return;
+        const days = Math.floor((Date.now()-s.start)/86400000);
+        if(days > s.record) s.record = days;
+        s.start = Date.now();
+        s.resets = (s.resets||0) + 1;
+        save(); render();
+        showToast('Nuevo comienzo. Bien por admitirlo.');
+      });
+    };
+
+    if(el('editBtn')) el('editBtn').onclick = ()=> {
+      if(!activeId) return showToast('No hay racha activa.');
+      const s = streaks.find(x=>x.id===activeId);
+      inputModal('Editar nombre de racha', 'Nombre', s.name, (val)=>{
+        if(val){ s.name = val; save(); render(); }
+      });
+    };
+
+    if(el('modeBtn')) el('modeBtn').onclick = ()=> {
+      document.body.classList.toggle('dark');
+      document.body.classList.toggle('light');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark':'light');
+    };
+
+    // Theme restore is already done before splash; keep it consistent:
+    (function(){
+      const t = localStorage.getItem('theme') || 'light';
+      if(!document.body.classList.contains(t)) {
+        document.body.classList.remove('light','dark');
+        document.body.classList.add(t);
+      }
+    })();
+
+    // --- Modal helpers ---
+    function confirmModal(text, okCb){
+      modalOpen(`<div>${text}</div>`, 'Aceptar', okCb);
+    }
+    function inputModal(title, placeholder, val, okCb){
+      modalOpen(`<div><strong>${title}</strong><div style="height:8px"></div><input id="modalInput" placeholder="${placeholder}" value="${val}" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)"></div>`, 'Crear', ()=>{
+        const v = document.getElementById('modalInput') ? document.getElementById('modalInput').value.trim() : '';
+        okCb(v);
+      });
+    }
+
+    function modalOpen(html, okText='Aceptar', okCb=null){
+      const m = el('modal'); if(!m) return;
+      m.classList.remove('hidden');
+      el('modalContent').innerHTML = html;
+      el('modalOk').innerText = okText;
+      const cleanup = ()=>{ m.classList.add('hidden'); el('modalOk').onclick = null; el('modalCancel').onclick = null; };
+      el('modalCancel').onclick = ()=>{ cleanup(); };
+      el('modalOk').onclick = ()=>{ if(okCb) okCb(); cleanup(); };
+    }
+
+    // Toast básico
+    function showToast(txt){
+      const t = document.createElement('div'); t.innerText = txt;
+      t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='24px';
+      t.style.background='rgba(0,0,0,0.7)'; t.style.color='white'; t.style.padding='10px 14px'; t.style.borderRadius='10px';
+      t.style.zIndex = 99999;
+      document.body.appendChild(t);
+      setTimeout(()=> t.style.opacity='0.0',2200);
+      setTimeout(()=> t.remove(),3000);
+    }
+
+    // Simulación de anuncio (modal)
+    function showAdSimulation(cb){
+      modalOpen('<div style="text-align:center;"><div>Reproduciendo anuncio...</div><div style="height:12px"></div><div class="spinner" style="height:6px;background:linear-gradient(90deg,var(--accent1),var(--accent2));border-radius:6px;width:80%;margin:0 auto;display:block"></div></div>','He visto', ()=>{
+        cb && cb();
+      });
+    }
+  } // end initApp
+})(); // IIFE
