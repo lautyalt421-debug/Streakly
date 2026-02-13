@@ -1,35 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Streakly • v1.1.2</title>
+  <title>Streakly • v1.2.0</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- SPLASH: aparece primero -->
-  <div id="splash" class="splash" aria-hidden="true">
-    <div class="splash-card" role="img" aria-label="Streakly splash">
-      <div class="splash-icon" id="splashIcon"></div>
-      <div class="splash-bar" aria-hidden="true">
-        <div id="splashProgress" class="splash-progress"></div>
+  <!-- LOGIN / BIENVENIDA -->
+  <div id="loginScreen" class="overlay hidden" aria-hidden="true">
+    <div class="card auth-card">
+      <h2>Streakly</h2>
+      <input id="authEmail" type="email" placeholder="Correo" />
+      <input id="authPass" type="password" placeholder="Contraseña" />
+      <div class="row">
+        <button id="authBtn">Ingresar / Registrarse</button>
+        <button id="guestBtn" class="ghost">Entrar como invitado</button>
       </div>
+      <div id="authMsg" class="muted"></div>
     </div>
   </div>
 
-  <!-- Top bar -->
-  <header class="topbar" role="banner">
+  <!-- SPLASH -->
+  <div id="splash" class="splash" aria-hidden="true">
+    <div class="splash-card">
+      <div id="splashIcon" class="splash-icon" aria-hidden="true"></div>
+      <div class="splash-bar"><div id="splashProgress" class="splash-progress"></div></div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <header class="topbar">
     <div class="brand">
       <div class="icon" aria-hidden="true"></div>
       <div class="title">streakly</div>
     </div>
     <div class="right">
-      <button id="modeBtn" class="ghost" aria-label="Cambiar modo">Modo</button>
+      <button id="signOutBtn" class="ghost hidden">Salir</button>
+      <button id="modeBtn" class="ghost">Modo</button>
     </div>
   </header>
 
-  <!-- App -->
-  <main class="app" id="appRoot" aria-live="polite">
+  <main id="appRoot" class="app hidden" aria-live="polite">
     <section class="active-section card">
       <div class="active-header">
         <div id="activeName" class="active-name">— Sin racha activa —</div>
@@ -38,7 +50,7 @@
 
       <div id="activeCounter" class="active-counter">0 días 0 horas 0 minutos 0 segundos</div>
 
-      <div class="active-stats" id="activeStats"></div>
+      <div id="activeStats" class="active-stats"></div>
 
       <div class="active-actions">
         <button id="resetBtn" class="danger">Volver a empezar</button>
@@ -59,7 +71,7 @@
     </section>
   </main>
 
-  <!-- Modales -->
+  <!-- MODAL -->
   <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
     <div class="modal-card">
       <div id="modalContent"></div>
@@ -70,6 +82,7 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Import UI logic (modular) -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
