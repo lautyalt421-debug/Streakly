@@ -3,43 +3,100 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Streakly • v1.2.0</title>
+  <title>Streakly • v1.3</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="light">
   <!-- SPLASH -->
   <div id="splash" class="splash" role="img" aria-label="Streakly splash">
     <div class="splash-card">
-      <div id="splashIcon" class="splash-icon" aria-hidden="true"></div>
+      <!-- Logo SVG inline (usa colores del logo) -->
+      <div class="splash-icon" aria-hidden="true">
+        <svg width="86" height="86" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg" role="img">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#3b82f6"/>
+              <stop offset="1" stop-color="#6d5dfc"/>
+            </linearGradient>
+          </defs>
+          <rect rx="16" width="86" height="86" fill="url(#g)"/>
+          <text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">S</text>
+        </svg>
+      </div>
       <div class="splash-bar"><div id="splashProgress" class="splash-progress"></div></div>
     </div>
   </div>
 
-  <!-- LOGIN / WELCOME OVERLAY -->
+  <!-- AUTH OVERLAY -->
   <div id="loginScreen" class="overlay hidden" role="dialog" aria-modal="true">
     <div class="card auth-card">
-      <h2 class="brand-title">streakly</h2>
-      <p class="muted">Iniciá sesión o creá una cuenta. También podés entrar como invitado.</p>
-
-      <label class="label">Correo</label>
-      <input id="authEmail" type="email" placeholder="tu@correo.com" autocomplete="email" />
-
-      <label class="label">Contraseña</label>
-      <input id="authPass" type="password" placeholder="Contraseña" autocomplete="current-password" />
-
-      <div class="row">
-        <button id="authBtn">Ingresar / Registrarse</button>
-        <button id="guestBtn" class="ghost">Entrar como invitado</button>
+      <div class="auth-top">
+        <!-- small logo -->
+        <div class="logo-small" aria-hidden="true">
+          <svg width="42" height="42" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d5dfc"/></linearGradient></defs><rect rx="10" width="86" height="86" fill="url(#g2)"/><text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">S</text></svg>
+        </div>
+        <h2 class="brand-title">streakly</h2>
       </div>
 
-      <div id="authMsg" class="muted" aria-live="polite" style="margin-top:8px;"></div>
+      <div id="authForms">
+        <!-- LOGIN FORM (default visible) -->
+        <form id="loginForm" class="auth-form">
+          <label class="label">Correo</label>
+          <input id="authEmail" type="email" placeholder="tu@correo.com" autocomplete="email" />
+
+          <label class="label">Contraseña</label>
+          <input id="authPass" type="password" placeholder="Contraseña" autocomplete="current-password" />
+
+          <div class="row">
+            <button type="button" id="signInBtn">Iniciar sesión</button>
+          </div>
+
+          <div class="muted" id="authMsg" aria-live="polite"></div>
+
+          <div class="alt">
+            <span>¿No tienes cuenta?</span>
+            <button type="button" id="showRegister" class="linkish">Regístrate</button>
+          </div>
+
+          <div class="divider">o</div>
+          <button type="button" id="googleBtn" class="ghost google">Iniciar sesión con Google</button>
+          <button type="button" id="guestBtn" class="ghost">Entrar como invitado</button>
+        </form>
+
+        <!-- REGISTER FORM (hidden until toggled) -->
+        <form id="registerForm" class="auth-form hidden">
+          <label class="label">Correo</label>
+          <input id="regEmail" type="email" placeholder="tu@correo.com" autocomplete="email" />
+
+          <label class="label">Contraseña (≥6)</label>
+          <input id="regPass" type="password" placeholder="Contraseña" autocomplete="new-password" />
+
+          <div class="row">
+            <button type="button" id="registerBtn">Registrarse</button>
+          </div>
+
+          <div class="muted" id="regMsg" aria-live="polite"></div>
+
+          <div class="alt">
+            <span>¿Ya tienes cuenta?</span>
+            <button type="button" id="showLogin" class="linkish">Iniciar sesión</button>
+          </div>
+
+          <div class="divider">o</div>
+          <button type="button" id="googleBtnReg" class="ghost google">Registrarse con Google</button>
+          <button type="button" id="guestBtnReg" class="ghost">Entrar como invitado</button>
+        </form>
+      </div>
     </div>
   </div>
 
   <!-- APP -->
   <header class="topbar">
     <div class="brand">
-      <div class="icon" aria-hidden="true"></div>
+      <div class="icon" aria-hidden="true">
+        <!-- small topbar logo (same svg) -->
+        <svg width="36" height="36" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g3" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d5dfc"/></linearGradient></defs><rect rx="10" width="86" height="86" fill="url(#g3)"/><text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">S</text></svg>
+      </div>
       <div class="title">streakly</div>
     </div>
     <div class="right">
@@ -49,7 +106,6 @@
   </header>
 
   <main id="appRoot" class="app hidden" aria-live="polite">
-    <!-- ACTIVE RATCHA -->
     <section class="active-section card">
       <div class="active-header">
         <div id="activeName" class="active-name">— Sin racha activa —</div>
@@ -66,7 +122,6 @@
       </div>
     </section>
 
-    <!-- LIST + CONTROLS -->
     <section class="list-section">
       <div class="controls card">
         <div class="left">
@@ -91,7 +146,7 @@
     </div>
   </div>
 
-  <!-- Script (module) -->
+  <!-- script -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
