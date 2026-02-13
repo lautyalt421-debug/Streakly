@@ -1,7 +1,7 @@
 /* =====================================================
    STREAKLY v1.3.1 CSS COMPLETO
-   Splash, login, register, topbar, app, rachas, modales
-   Logo sin fondo escalado correctamente
+   Splash, login/register, topbar, app, rachas, modales
+   Logo sin fondo ya escalado correctamente
    ===================================================== */
 
 /* -------------------- GLOBAL -------------------- */
@@ -17,6 +17,45 @@ body {
 button { cursor:pointer; border:none; outline:none; }
 button.ghost { background:none; color:inherit; }
 a, .linkish { cursor:pointer; color:#34E0D1; text-decoration:underline; }
+
+/* ==== Logo sizing & remove generic SVG fallback ==== */
+/* Contenedores */
+.splash-icon { width: 120px; height: 120px; display:flex; align-items:center; justify-content:center; margin:0 auto; }
+.logo-small { width: 80px; height: 80px; display:flex; align-items:center; justify-content:center; }
+.topbar .icon { width: 36px; height: 36px; display:flex; align-items:center; justify-content:center; }
+
+/* Imágenes (tamaño máximo y centrado) */
+#splashLogo,
+#authLogo,
+#topbarIcon,
+.logo-small img,
+.splash-icon img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Valores estrictos para asegurar que nunca sean gigantes */
+#splashLogo { max-width: 120px; max-height: 120px; }
+#authLogo   { max-width: 80px;  max-height: 80px;  }
+#topbarIcon { max-width: 36px;  max-height: 36px;  }
+
+/* Ocultar cualquier fallback SVG que haya quedado */
+.fallback-logo,
+.fallback-icon,
+.fallback-topbar-icon { display: none !important; }
+
+/* Asegurar que el contenedor del auth-card no crezca por culpa del logo */
+.auth-card { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+/* Pequeño ajuste responsive */
+@media (min-width: 720px){
+  .splash-icon { width: 140px; height: 140px; }
+  #splashLogo { max-width: 140px; max-height: 140px; }
+}
 
 /* -------------------- SPLASH -------------------- */
 .splash{
@@ -43,18 +82,7 @@ a, .linkish { cursor:pointer; color:#34E0D1; text-decoration:underline; }
 .splash-icon{
   width:92px;height:92px;border-radius:18px; display:flex;align-items:center;justify-content:center;overflow:visible; margin-bottom:16px; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.35));
 }
-/* LOGO ESCALADO CORRECTAMENTE */
-.splash-icon img#splashLogo {
-  max-width: 120px;
-  max-height: 120px;
-  width: auto;
-  height: auto;
-  display: block;
-  object-fit: contain;
-  margin: 0 auto;
-}
 .fallback-logo{ display:block; width:86px; height:86px; }
-
 .splash-bar{ width:78%; height:12px; background: rgba(255,255,255,0.08); border-radius:8px; overflow:hidden; }
 .splash-progress{ width:0%; height:100%; border-radius:8px; transition: width .35s ease; background: linear-gradient(90deg,#34E0D1 0%, #2C5AE5 50%, #FF42A1 100%); box-shadow: inset 0 -2px 6px rgba(0,0,0,0.12); }
 .splash-card::after{
