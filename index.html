@@ -7,81 +7,78 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="light">
-  <!-- SPLASH -->
+  <!-- SPLASH: usa gradiente mesh → y el logo que subas -->
   <div id="splash" class="splash" role="img" aria-label="Streakly splash">
     <div class="splash-card">
-      <!-- Logo SVG inline (usa colores del logo) -->
       <div class="splash-icon" aria-hidden="true">
-        <svg width="86" height="86" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg" role="img">
+        <!-- PRIMERA OPCIÓN: imagen real (preferible) -->
+        <img id="splashLogo" src="assets/logo-full.png" alt="Streakly logo" onerror="this.style.display='none'">
+        <!-- Fallback: SVG sencillo si no subiste imagen -->
+        <svg id="fallbackLogo" class="fallback-logo" width="86" height="86" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
           <defs>
-            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#3b82f6"/>
-              <stop offset="1" stop-color="#6d5dfc"/>
+            <linearGradient id="splashGradient" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#34E0D1"/>
+              <stop offset="0.45" stop-color="#2C5AE5"/>
+              <stop offset="1" stop-color="#FF42A1"/>
             </linearGradient>
           </defs>
-          <rect rx="16" width="86" height="86" fill="url(#g)"/>
-          <text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">S</text>
+          <rect rx="16" width="86" height="86" fill="url(#splashGradient)"/>
+          <text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">∞</text>
         </svg>
       </div>
+
       <div class="splash-bar"><div id="splashProgress" class="splash-progress"></div></div>
     </div>
   </div>
 
-  <!-- AUTH OVERLAY -->
+  <!-- AUTH OVERLAY (sin cambios funcionales) -->
   <div id="loginScreen" class="overlay hidden" role="dialog" aria-modal="true">
     <div class="card auth-card">
       <div class="auth-top">
-        <!-- small logo -->
         <div class="logo-small" aria-hidden="true">
-          <svg width="42" height="42" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d5dfc"/></linearGradient></defs><rect rx="10" width="86" height="86" fill="url(#g2)"/><text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">S</text></svg>
+          <!-- Topbar small icon: usa tu icono si lo subes -->
+          <img id="topIcon" src="assets/logo-icon.png" alt="Streakly icon" onerror="this.style.display='none'">
+          <svg id="fallbackIcon" class="fallback-icon" width="42" height="42" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs><linearGradient id="g2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d5dfc"/></linearGradient></defs>
+            <rect rx="10" width="86" height="86" fill="url(#g2)"/><text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">S</text>
+          </svg>
         </div>
         <h2 class="brand-title">streakly</h2>
       </div>
 
+      <!-- Forms (misma estructura que tenías) -->
       <div id="authForms">
-        <!-- LOGIN FORM (default visible) -->
         <form id="loginForm" class="auth-form">
           <label class="label">Correo</label>
           <input id="authEmail" type="email" placeholder="tu@correo.com" autocomplete="email" />
-
           <label class="label">Contraseña</label>
           <input id="authPass" type="password" placeholder="Contraseña" autocomplete="current-password" />
-
           <div class="row">
             <button type="button" id="signInBtn">Iniciar sesión</button>
           </div>
-
           <div class="muted" id="authMsg" aria-live="polite"></div>
-
           <div class="alt">
             <span>¿No tienes cuenta?</span>
             <button type="button" id="showRegister" class="linkish">Regístrate</button>
           </div>
-
           <div class="divider">o</div>
           <button type="button" id="googleBtn" class="ghost google">Iniciar sesión con Google</button>
           <button type="button" id="guestBtn" class="ghost">Entrar como invitado</button>
         </form>
 
-        <!-- REGISTER FORM (hidden until toggled) -->
         <form id="registerForm" class="auth-form hidden">
           <label class="label">Correo</label>
           <input id="regEmail" type="email" placeholder="tu@correo.com" autocomplete="email" />
-
           <label class="label">Contraseña (≥6)</label>
           <input id="regPass" type="password" placeholder="Contraseña" autocomplete="new-password" />
-
           <div class="row">
             <button type="button" id="registerBtn">Registrarse</button>
           </div>
-
           <div class="muted" id="regMsg" aria-live="polite"></div>
-
           <div class="alt">
             <span>¿Ya tienes cuenta?</span>
             <button type="button" id="showLogin" class="linkish">Iniciar sesión</button>
           </div>
-
           <div class="divider">o</div>
           <button type="button" id="googleBtnReg" class="ghost google">Registrarse con Google</button>
           <button type="button" id="guestBtnReg" class="ghost">Entrar como invitado</button>
@@ -90,12 +87,12 @@
     </div>
   </div>
 
-  <!-- APP -->
+  <!-- APP: idéntico a v1.3 -->
   <header class="topbar">
     <div class="brand">
       <div class="icon" aria-hidden="true">
-        <!-- small topbar logo (same svg) -->
-        <svg width="36" height="36" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g3" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d5dfc"/></linearGradient></defs><rect rx="10" width="86" height="86" fill="url(#g3)"/><text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">S</text></svg>
+        <img id="topbarIcon" src="assets/logo-icon.png" alt="Streakly icon" onerror="this.style.display='none'">
+        <svg class="fallback-topbar-icon" width="36" height="36" viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="g3" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#6d5dfc"/></linearGradient></defs><rect rx="10" width="86" height="86" fill="url(#g3)"/><text x="50%" y="54%" text-anchor="middle" font-size="40" font-family="Inter, Arial" fill="white" font-weight="700">S</text></svg>
       </div>
       <div class="title">streakly</div>
     </div>
@@ -111,11 +108,8 @@
         <div id="activeName" class="active-name">— Sin racha activa —</div>
         <div id="phrase" class="phrase">Crea tu primera racha y empieza a construir identidad.</div>
       </div>
-
       <div id="activeCounter" class="active-counter">0 días 0 horas 0 minutos 0 segundos</div>
-
       <div id="activeStats" class="active-stats" aria-live="polite"></div>
-
       <div class="active-actions">
         <button id="resetBtn" class="danger">Volver a empezar</button>
         <button id="editBtn" class="ghost">Editar</button>
@@ -130,7 +124,6 @@
         </div>
         <div class="right guest" id="guestNotice">Modo invitado — tus datos están locales</div>
       </div>
-
       <div id="streakList" class="streak-list card"></div>
     </section>
   </main>
@@ -141,12 +134,12 @@
       <div id="modalContent"></div>
       <div class="modal-actions">
         <button id="modalCancel" class="ghost">Cancelar</button>
-        <button id="modalOk">Aceptar</button>
+        <button id="modalOk" class="ghost">Aceptar</button>
       </div>
     </div>
   </div>
 
-  <!-- script -->
+  <!-- script (mantén tu script.js v1.3) -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
