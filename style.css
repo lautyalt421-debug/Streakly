@@ -1,78 +1,117 @@
-:root{
-  --bg-light:#f4f4f4; --text-light:#0f1720; --card-light:#fff; --card-border-light:rgba(2,6,23,0.06);
-  --bg-dark:#0f0f12; --text-dark:#eef2ff; --card-dark:rgba(255,255,255,0.02); --card-border-dark:rgba(255,255,255,0.06);
-  --accent1:#3b82f6; --accent2:#6d5dfc; --card-radius:14px; --max-width:920px;
+/* =====================================================
+   STREAKLY v1.3 CSS COMPLETO
+   Incluye splash, topbar, login, rachas, botones, modos
+   ===================================================== */
+
+/* -------------------- GLOBAL -------------------- */
+body {
+  margin:0;
+  font-family: 'Inter', sans-serif;
+  color:#fff;
+  background:#1a1a1a;
+  overflow-x:hidden;
 }
+.light { background:#fdfdfd; color:#111; }
+.hidden { display:none !important; }
+button { cursor:pointer; border:none; outline:none; }
+button.ghost { background:none; color:inherit; }
+a, .linkish { cursor:pointer; color:#34E0D1; text-decoration:underline; }
 
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter, system-ui, Arial, sans-serif;transition:background .25s ease,color .25s}
-:root{color-scheme: light dark}
-body.light{background:var(--bg-light);color:var(--text-light);--card-bg:var(--card-light);--card-border:var(--card-border-light);--ghost-border:rgba(15,23,32,0.08);--modal-bg:#fff;--modal-text:var(--text-light)}
-body.dark{background:var(--bg-dark);color:var(--text-dark);--card-bg:var(--card-dark);--card-border:var(--card-border-dark);--ghost-border:rgba(255,255,255,0.08);--modal-bg:rgba(8,10,12,0.92);--modal-text:var(--text-dark)}
+/* -------------------- SPLASH -------------------- */
+.splash{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background: linear-gradient(135deg,#1A42AC 0%, #8C38C1 55%, #E64998 100%);
+  z-index:10000;
+  overflow:hidden;
+}
+.splash::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03) 0, transparent 20%),
+    radial-gradient(circle at 90% 85%, rgba(0,0,0,0.04) 0, transparent 30%);
+}
+.splash-card{
+  width:200px;height:200px;border-radius:26px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  transform-origin:center;
+  animation:popIn .7s cubic-bezier(.2,.9,.2,1);
+  position:relative;
+}
+.splash-icon{
+  width:92px;height:92px;border-radius:18px; display:flex;align-items:center;justify-content:center;overflow:visible; margin-bottom:16px; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.35));
+}
+.splash-icon img#splashLogo{
+  max-width:86px; max-height:86px; display:block; width:auto; height:auto; object-fit:contain;
+  filter: drop-shadow(0 10px 26px rgba(255,66,161,0.12)) drop-shadow(0 6px 18px rgba(44,90,229,0.08));
+}
+.fallback-logo{ display:block; width:86px; height:86px; }
+.splash-bar{ width:78%; height:12px; background: rgba(255,255,255,0.08); border-radius:8px; overflow:hidden; }
+.splash-progress{ width:0%; height:100%; border-radius:8px; transition: width .35s ease; background: linear-gradient(90deg,#34E0D1 0%, #2C5AE5 50%, #FF42A1 100%); box-shadow: inset 0 -2px 6px rgba(0,0,0,0.12); }
+.splash-card::after{
+  content:"";position:absolute;left: -40%;top:-30%;width:180%;height:160%;transform:rotate(25deg);background:linear-gradient(90deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.0) 45%, rgba(255,255,255,0.06) 100%);opacity:0.6;mix-blend-mode:overlay;animation:sheen 3.2s linear infinite;
+}
+@keyframes sheen{0%{transform:translateX(-30%) rotate(25deg)}100%{transform:translateX(30%) rotate(25deg)}}
+@keyframes popIn{0%{transform:scale(.95);opacity:0}60%{transform:scale(1.02);opacity:1}100%{transform:scale(1);opacity:1}}
 
-/* topbar */
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
-.brand{display:flex;gap:10px;align-items:center}
-.icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));box-shadow:0 6px 18px rgba(59,130,246,0.12)}
-.title{text-transform:lowercase;font-weight:700}
+/* -------------------- TOPBAR -------------------- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px);
+  position:sticky;top:0; z-index:200;
+}
+.topbar .brand { display:flex;align-items:center;gap:10px; }
+.topbar .brand .icon img, .topbar .brand .icon svg{ width:36px;height:36px; border-radius:8px; }
+.topbar .brand .title { font-size:1.25rem; font-weight:700; text-transform:capitalize; }
+.topbar .right button { margin-left:10px; }
 
-/* buttons */
-.right{display:flex;gap:8px;align-items:center}
-button{cursor:pointer;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;padding:10px 14px;border-radius:10px;font-weight:600;transition:transform .12s ease,opacity .12s}
-button.ghost{background:transparent;color:inherit;border:1px solid var(--ghost-border)}
-button.danger{background:transparent;border:1px solid rgba(255,80,80,0.18);color:inherit}
-button.google{background:transparent;border:1px solid rgba(0,0,0,0.06);color:inherit;display:block;width:100%}
+/* -------------------- LOGIN / REGISTER -------------------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000;
+}
+.card.auth-card{
+  width:90%;max-width:360px;padding:24px;border-radius:16px;
+  background: rgba(30,30,30,0.85);backdrop-filter:blur(8px);
+  display:flex;flex-direction:column;gap:12px;
+}
+.auth-top { text-align:center; margin-bottom:16px; }
+.auth-top h2.brand-title { font-size:2rem; font-weight:700; text-transform:capitalize; color:#fff; }
+.auth-form { display:flex; flex-direction:column; gap:12px; }
+.auth-form input { padding:10px 12px; border-radius:8px; border:none; outline:none; }
+.auth-form .row{ display:flex; justify-content:flex-end; gap:10px; }
+.auth-form .alt{ display:flex;justify-content:center;align-items:center;gap:6px; margin-top:8px; font-size:.875rem; color:#ccc; }
+.auth-form .divider{ text-align:center; margin:12px 0; position:relative; color:#888; font-size:.75rem;}
+.auth-form .divider::before, .auth-form .divider::after{
+  content:""; position:absolute; top:50%; width:40%; height:1px; background:#555;
+}
+.auth-form .divider::before{ left:0; }
+.auth-form .divider::after{ right:0; }
 
-/* layout */
-.app{display:grid;grid-template-columns:1fr;gap:16px;padding:16px;max-width:var(--max-width);margin:0 auto}
-.card{background:var(--card-bg);border-radius:var(--card-radius);padding:16px;box-shadow:0 6px 20px rgba(2,6,23,0.06);border:1px solid var(--card-border)}
+/* Google button */
+button.google{ background:#fff;color:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:8px; padding:8px; font-weight:600; }
 
-/* active */
-.active-section{display:flex;flex-direction:column;align-items:center;gap:12px;min-height:220px;justify-content:center}
-.active-name{font-size:18px;font-weight:700;text-transform:capitalize}
-.phrase{font-size:13px;opacity:0.95;color:var(--accent1)}
-.active-counter{font-size:20px;font-weight:800}
-.active-actions{display:flex;gap:8px}
+/* -------------------- APP / SECTIONS -------------------- */
+.app{ display:flex; flex-direction:column; padding:16px; gap:12px; }
+.card{ background: rgba(0,0,0,0.65); backdrop-filter:blur(8px); padding:16px; border-radius:14px; }
+.active-counter{ font-size:1.5rem; font-weight:700; text-align:center; margin:12px 0; }
+.active-actions{ display:flex; justify-content:center; gap:10px; margin-top:12px; }
+button.danger{ background:#e63946; color:#fff; padding:8px 14px; border-radius:8px; font-weight:600; }
+button.ghost{ background:none; border:1px solid #555; padding:6px 12px; border-radius:8px; color:#fff; font-weight:500; }
 
-/* list */
-.list-section{display:flex;flex-direction:column;gap:12px}
-.controls{display:flex;justify-content:space-between;align-items:center}
-.streak-list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
-.streak-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);transition:transform .12s;border:1px solid var(--card-border)}
-.streak-info{display:flex;flex-direction:column}
-.streak-name{font-weight:700}
-.small-counter{font-size:13px;opacity:0.85}
+/* -------------------- STREAK LIST -------------------- */
+.streak-list{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+.streak-item{ display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:10px; background: rgba(255,255,255,0.05); }
+.streak-item .name{ font-weight:600; }
+.streak-item .time{ font-weight:500; font-size:.875rem; }
 
-/* overlay auth */
-.overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.45);backdrop-filter: blur(4px);z-index:9998}
-.hidden{display:none}
-.auth-card{width:92%;max-width:420px;padding:18px;border-radius:14px;background:var(--card-bg);border:1px solid var(--card-border)}
-.auth-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-.brand-title{margin:0;text-transform:lowercase;font-weight:800;font-size:22px}
-.auth-card input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(0,0,0,0.06)}
-.row{display:flex;gap:8px;justify-content:space-between;margin-top:8px}
-.muted{font-size:13px;color:rgba(0,0,0,0.45);opacity:0.95}
-.label{font-size:12px;color:rgba(0,0,0,0.6);margin-top:6px;display:block}
-.alt{margin-top:8px;display:flex;gap:8px;align-items:center}
-.linkish{background:transparent;border:none;color:var(--accent2);cursor:pointer;padding:0;font-weight:700}
-.divider{text-align:center;margin:10px 0;color:rgba(0,0,0,0.35)}
+/* -------------------- MODAL -------------------- */
+.modal{ position:fixed; inset:0; display:flex;align-items:center;justify-content:center; background:rgba(0,0,0,0.6); z-index:1000; }
+.modal-card{ background: rgba(30,30,30,0.85); padding:20px; border-radius:14px; min-width:280px; max-width:90%; display:flex; flex-direction:column; gap:12px; }
+.modal-actions{ display:flex; justify-content:flex-end; gap:8px; }
 
-/* modal */
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.45);backdrop-filter: blur(4px);z-index:9999}
-.modal.hidden{display:none}
-.modal-card{background:var(--modal-bg);color:var(--modal-text);padding:18px;border-radius:12px;min-width:280px;max-width:92%}
-.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
-
-/* splash */
-.splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent1),var(--accent2));z-index:10000}
-.splash-card{width:180px;height:180px;border-radius:24px;background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 20px 60px rgba(2,6,23,0.25);animation:popIn .65s}
-@keyframes popIn{0%{transform:scale(.95);opacity:0}60%{transform:scale(1.02);opacity:1}100%{transform:scale(1)}}
-.splash-icon{margin-bottom:14px}
-.splash-bar{width:76%;height:10px;background:rgba(255,255,255,0.18);border-radius:6px;overflow:hidden}
-.splash-progress{width:0%;height:100%;background:linear-gradient(90deg,var(--accent1),var(--accent2));border-radius:6px;transition:width .35s}
-
-/* responsive */
-@media(min-width:720px){
-  .app{grid-template-columns:1fr 380px}
-  .active-section{min-height:300px}
-                                                                 }
+/* -------------------- MISC -------------------- */
+.row{ display:flex; gap:10px; }
+.muted{ font-size:.75rem; color:#aaa; }
+.right.guest{ font-size:.75rem; color:#ccc; text-align:right; }
+button:disabled{ opacity:.5; cursor:not-allowed; }
