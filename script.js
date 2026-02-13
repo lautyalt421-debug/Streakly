@@ -1,4 +1,4 @@
-// Streakly v1.1 - simple, local-first
+// Streakly v1.1.2 - local-first + splash + theme fixes
 const MAX_FREE = 3;
 let unlockedSlots = parseInt(localStorage.getItem('unlockedSlots')||MAX_FREE,10);
 let streaks = JSON.parse(localStorage.getItem('streaks')||'[]');
@@ -30,6 +30,25 @@ function formatDiff(ms){
   const d = Math.floor(ms/86400000);
   return `${d} días ${h} horas ${m} minutos ${s} segundos`;
 }
+
+// Theme restore asap to avoid flash
+(function(){
+  const t = localStorage.getItem('theme') || 'light';
+  document.body.classList.add(t);
+})();
+
+// Splash handling (Op A)
+function hideSplash(){
+  const splash = document.getElementById('splash');
+  if(!splash) return;
+  splash.style.opacity = '0';
+  setTimeout(()=> splash.remove(), 450);
+}
+// show splash briefly then hide
+window.addEventListener('load', ()=> {
+  // keep splash visible 800-1100ms
+  setTimeout(hideSplash, 900);
+});
 
 // Render
 function render(){
@@ -85,9 +104,7 @@ function render(){
 render();
 
 // Update counters every second
-setInterval(()=> {
-  render();
-}, 1000);
+setInterval(()=> { render(); }, 1000);
 
 // UI actions
 el('createBtn').onclick = ()=> {
@@ -105,7 +122,6 @@ el('createBtn').onclick = ()=> {
 };
 
 el('watchAdBtn').onclick = ()=> {
-  // Simula ver anuncio -> desbloquea 1 slot
   showAdSimulation(()=> {
     unlockedSlots += 1;
     save();
@@ -119,7 +135,6 @@ el('resetBtn').onclick = ()=> {
   confirmModal(`¿Seguro? "Volver a empezar" reinicia la racha. Si sos honesto, tocá aceptar.`, ()=>{
     const s = streaks.find(x=>x.id===activeId);
     if(!s) return;
-    // calcular días actuales para récord
     const days = Math.floor((Date.now()-s.start)/86400000);
     if(days > s.record) s.record = days;
     s.start = Date.now();
@@ -143,18 +158,12 @@ el('modeBtn').onclick = ()=> {
   localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark':'light');
 };
 
-// Theme restore
-(function(){
-  const t = localStorage.getItem('theme') || 'light';
-  document.body.classList.add(t);
-})();
-
 // Simple modal helpers
 function confirmModal(text, okCb){
   modalOpen(`<div>${text}</div>`, 'Aceptar', okCb);
 }
 function inputModal(title, placeholder, val, okCb){
-  modalOpen(`<div><strong>${title}</strong><div style="height:8px"></div><input id="modalInput" placeholder="${placeholder}" value="${val}" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.1)"></div>`, 'Crear', ()=>{
+  modalOpen(`<div><strong>${title}</strong><div style="height:8px"></div><input id="modalInput" placeholder="${placeholder}" value="${val}" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)"></div>`, 'Crear', ()=>{
     const v = document.getElementById('modalInput').value.trim();
     okCb(v);
   });
@@ -182,10 +191,6 @@ function showToast(txt){
 // Simulación de anuncio (5s)
 function showAdSimulation(cb){
   modalOpen('<div style="text-align:center;"><div>Reproduciendo anuncio...</div><div style="height:12px"></div><div class="spinner" style="height:6px;background:linear-gradient(90deg,var(--accent1),var(--accent2));border-radius:6px;width:80%;margin:0 auto;display:block"></div></div>','He visto', ()=>{
-    // simulación; en la versión real integrar Ad SDK
     cb && cb();
   });
 }
-
-// Inicial render
-render();
