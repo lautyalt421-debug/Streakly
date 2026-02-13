@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Streakly</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>Streakly</h1>
+
+    <div class="counter" id="counter">
+      0 días 0 horas 0 minutos 0 segundos
+    </div>
+
+    <div class="buttons">
+      <button onclick="startStreak()">Crear racha</button>
+      <button onclick="resetStreak()">Volver a empezar</button>
+      <button onclick="toggleMode()">Modo claro/oscuro</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

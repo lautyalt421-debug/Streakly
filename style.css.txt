@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.light {
+  background: #f4f4f4;
+  color: #111;
+}
+
+body.dark {
+  background: #0f0f12;
+  color: #fff;
+}
+
+.container {
+  text-align: center;
+  padding: 20px;
+}
+
+.counter {
+  font-size: 20px;
+  margin: 20px 0;
+  transition: opacity 0.3s ease;
+}
+
+button {
+  margin: 5px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
